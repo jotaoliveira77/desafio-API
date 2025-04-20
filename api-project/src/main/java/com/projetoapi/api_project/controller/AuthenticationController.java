@@ -1,55 +1,55 @@
 package com.projetoapi.api_project.controller;
 
 import com.projetoapi.api_project.model.LoginDTO;
+import com.projetoapi.api_project.model.RegisterDTO;
 import com.projetoapi.api_project.model.Users;
 import com.projetoapi.api_project.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
 
     @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
     UserRepository userRepository;
 @PostMapping("/signup")
-public ResponseEntity<?> register(@RequestBody Users user) {
-    if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO user) {
+
+    if (this.userRepository.findByUsername(user.username()) !=  null) {
         return ResponseEntity.badRequest().body("Nome de usuário já está em uso");
     }
-    if (userRepository.existsByEmail(user.getEmail())) {
+    if (this.userRepository.existsByEmail(user.email())) {
         return ResponseEntity.badRequest().body("E-mail já está em uso");
     }
 
-    Users usuario = new Users();
-    usuario.setUsername(user.getUsername());
-    usuario.setPassword(user.getPassword());
-    usuario.setEmail(user.getEmail());
+    String encryptedPassword = new BCryptPasswordEncoder().encode(user.password());
+    Users newUser = new Users(user.username(), user.email(), user.role(), encryptedPassword);
 
-    userRepository.save(user);
+    this.userRepository.save(newUser);
 
     return ResponseEntity.ok("Usuário registrado");
 }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody @Valid LoginDTO data) {
-        var userOptional = userRepository.findByUsername(data.username());
+    public ResponseEntity login(@RequestBody @Valid LoginDTO data) {
+        var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
+        var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        if (userOptional.isPresent()) {
-            Users user = userOptional.get();
+        return ResponseEntity.ok("Usuário autenticado com sucesso");
 
-            if (user.getPassword().equals(data.password())) {
-                return ResponseEntity.ok("Login realizado com sucesso");
-            } else {
-                return ResponseEntity.badRequest().body("Nome de usuário ou senha inválidos");
-            }
-        } else {
-            return ResponseEntity.badRequest().body("Nome de usuário ou senha inválidos");
-        }
     }
+
+
 }
