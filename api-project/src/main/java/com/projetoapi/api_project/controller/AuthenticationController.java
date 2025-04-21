@@ -1,9 +1,11 @@
 package com.projetoapi.api_project.controller;
 
 import com.projetoapi.api_project.model.LoginDTO;
+import com.projetoapi.api_project.model.LoginResponseDTO;
 import com.projetoapi.api_project.model.RegisterDTO;
 import com.projetoapi.api_project.model.Users;
 import com.projetoapi.api_project.repository.UserRepository;
+import com.projetoapi.api_project.security.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
+
+    @Autowired
+    private TokenService tokenService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -47,7 +52,8 @@ public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO user) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok("Usuário autenticado com sucesso");
+        var token = tokenService.generateToken((Users)auth.getPrincipal());
+        return ResponseEntity.ok(new LoginResponseDTO(token));
 
     }
 
