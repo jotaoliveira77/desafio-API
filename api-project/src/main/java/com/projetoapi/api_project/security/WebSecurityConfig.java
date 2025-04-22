@@ -24,20 +24,18 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity)throws Exception{
 
-            return httpSecurity
-                    .csrf(csrf -> csrf.disable())
-                    .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .authorizeHttpRequests(authorize -> authorize
-
-                            .requestMatchers(HttpMethod.POST ,"/auth/signup").permitAll()
-                            .requestMatchers(HttpMethod.POST ,"/auth/login").permitAll()
-
-                            .anyRequest().authenticated())
-                    .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class )
-                    .build();
-
-
+        return httpSecurity
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.POST ,"/auth/signup").permitAll()
+                        .requestMatchers(HttpMethod.POST ,"/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST ,"/auth/logout").permitAll() // liberar logout
+                        .anyRequest().authenticated())
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class )
+                .build();
     }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
         return authenticationConfiguration.getAuthenticationManager();
