@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
-import com.projetoapi.api_project.model.Users;
+import com.projetoapi.api_project.model.usersPackage.Users;
 
 import java.util.Optional;
 

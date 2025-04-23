@@ -1,10 +1,9 @@
 package com.projetoapi.api_project.controller;
 
-import com.projetoapi.api_project.model.*;
+import com.projetoapi.api_project.model.usersPackage.*;
 import com.projetoapi.api_project.repository.UserRepository;
 import com.projetoapi.api_project.security.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

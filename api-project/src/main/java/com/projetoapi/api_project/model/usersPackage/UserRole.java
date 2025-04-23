@@ -1,4 +1,4 @@
-package com.projetoapi.api_project.model;
+package com.projetoapi.api_project.model.usersPackage;
 
 public enum UserRole {
     ADMIN(1),

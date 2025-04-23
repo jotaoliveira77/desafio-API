@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.projetoapi.api_project.model.Users;
+import com.projetoapi.api_project.model.usersPackage.Users;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

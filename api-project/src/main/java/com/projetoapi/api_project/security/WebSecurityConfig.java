@@ -30,7 +30,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST ,"/auth/signup").permitAll()
                         .requestMatchers(HttpMethod.POST ,"/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST ,"/auth/logout").permitAll() // liberar logout
+                        .requestMatchers(HttpMethod.POST ,"/auth/logout").permitAll()
+                        .requestMatchers("/movies/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class )
                 .build();
