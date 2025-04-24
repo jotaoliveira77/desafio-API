@@ -18,6 +18,11 @@ public class MoviesService {
     @Autowired
     MoviesRepository moviesRepository;
 
+
+    public List<Movies> searchAllFields(String searchTerm, int pagina, int tamanho) {
+        return moviesRepository.searchAllFields(searchTerm, PageRequest.of(pagina, tamanho)).getContent();
+    }
+
     public List<Movies> listMovies(int pagina, int tamanho) {
         return moviesRepository.findAll(PageRequest.of(pagina, tamanho)).getContent();
     }
@@ -32,5 +37,7 @@ public class MoviesService {
 
     public List<Movies> findByGenre(String genre,  int pagina, int tamanho) {
         return moviesRepository.findByGenre(genre, PageRequest.of( pagina, tamanho)).getContent();
+
+
     }
 }
