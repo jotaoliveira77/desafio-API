@@ -19,8 +19,6 @@ public interface MoviesRepository extends JpaRepository<Movies, Long> {
             "LOWER(m.genre) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     Page<Movies> searchAllFields(@org.springframework.data.repository.query.Param("searchTerm") String searchTerm, Pageable pageable);
 
-
-
     Page<Movies> findByTitle(String title, Pageable pageable);
     Page<Movies> findByDirector(String director, Pageable pageable);
     Page<Movies> findByGenre(String genre, Pageable pageable);

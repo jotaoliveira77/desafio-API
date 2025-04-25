@@ -56,5 +56,10 @@ public class MoviesController {
         return moviesService.searchAllFields(searchTerm, pagina, tamanho);
     }
 
+    @PostMapping("/importar-tmdb")
+    public ResponseEntity<String> importarFilmes() {
+        moviesService.importarFilmesPopularesDoTMDB();
+        return ResponseEntity.ok("Importação feita!");
+    }
 }
 
