@@ -98,8 +98,4 @@ public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO user) {
             return ResponseEntity.internalServerError().body("Erro ao processar a solicitação");
         }
     }
-
-
-
-
 }
