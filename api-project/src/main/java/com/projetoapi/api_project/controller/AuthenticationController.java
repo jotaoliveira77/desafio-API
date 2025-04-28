@@ -3,6 +3,7 @@ package com.projetoapi.api_project.controller;
 import com.projetoapi.api_project.model.usersPackage.*;
 import com.projetoapi.api_project.repository.UserRepository;
 import com.projetoapi.api_project.security.TokenService;
+import com.projetoapi.api_project.service.EmailService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class AuthenticationController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    private EmailService emailService;
 @PostMapping("/signup")
 public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO user) {
 
@@ -41,6 +45,7 @@ public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO user) {
 
     String encryptedPassword = new BCryptPasswordEncoder().encode(user.password());
     Users newUser = new Users(user.username(), user.email(), user.role(), encryptedPassword);
+    emailService.sendEmail(user.email(), "Registro de Usuário", "Seu registro foi realizado com sucesso!");
 
     this.userRepository.save(newUser);
 
