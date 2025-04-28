@@ -1,19 +1,12 @@
 package com.projetoapi.api_project.controller;
 
 import com.projetoapi.api_project.model.moviesPackage.Movies;
+import com.projetoapi.api_project.model.usersPackage.Users;
 import com.projetoapi.api_project.service.MoviesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/movies")
@@ -53,7 +46,13 @@ public class MoviesController {
     public List<Movies> searchAllFields(@RequestParam("searchTerm") String searchTerm,
                                         @RequestParam("pagina") int pagina,
                                         @RequestParam("tamanho") int tamanho){
-        return moviesService.searchAllFields(searchTerm, pagina, tamanho);
+
+       Users user = new Users();
+       if( user.isEnabled() == false) {
+           return null;
+       }
+
+       return moviesService.searchAllFields(searchTerm, pagina, tamanho);
     }
 
     @PostMapping("/importar-tmdb")

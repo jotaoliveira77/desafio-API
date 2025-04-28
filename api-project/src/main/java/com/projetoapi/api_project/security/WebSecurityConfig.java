@@ -28,9 +28,8 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST ,"/auth/**").permitAll()
+                        .requestMatchers( "/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "movies/importar-tmdb").hasRole("ADMIN")
-                        //.requestMatchers("/movies/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class )
                 .build();

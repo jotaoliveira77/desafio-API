@@ -24,11 +24,9 @@ public class EmailService {
             message.setText(mensagem);
 
             mailSender.send(message);
-            System.out.println("Email enviado com sucesso para " + destinatario);
             return "Email enviado";
 
         } catch (Exception e) {
-            System.out.println("Erro ao enviar email: " + e.getMessage());
             return "Erro ao enviar email: " + e.getMessage();
         }
     }

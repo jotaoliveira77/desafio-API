@@ -1,6 +1,7 @@
 package com.projetoapi.api_project.service;
 
 import com.projetoapi.api_project.model.usersPackage.Users;
+import com.projetoapi.api_project.model.usersPackage.VerificadorUsuario;
 import com.projetoapi.api_project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

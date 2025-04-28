@@ -2,6 +2,7 @@ package com.projetoapi.api_project.controller;
 
 import com.projetoapi.api_project.model.usersPackage.*;
 import com.projetoapi.api_project.repository.UserRepository;
+import com.projetoapi.api_project.repository.VerificadoroUsuarioRepository;
 import com.projetoapi.api_project.security.TokenService;
 import com.projetoapi.api_project.service.EmailService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,9 +19,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Instant;
+import java.util.Optional;
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
+
+    @Autowired
+    VerificadoroUsuarioRepository verificadoroUsuarioRepository;
 
     @Autowired
     private TokenService tokenService;
@@ -45,11 +53,20 @@ public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO user) {
 
     String encryptedPassword = new BCryptPasswordEncoder().encode(user.password());
     Users newUser = new Users(user.username(), user.email(), user.role(), encryptedPassword);
-    emailService.sendEmail(user.email(), "Registro de Usuário", "Seu registro foi realizado com sucesso!");
 
     this.userRepository.save(newUser);
 
-    return ResponseEntity.ok("Usuário registrado");
+    UUID uuid = UUID.randomUUID();
+    Instant expDate = Instant.now().plusSeconds(60 * 60 * 24); // 24 horas para expirar
+    VerificadorUsuario verificador = new VerificadorUsuario(null, uuid, expDate, newUser);
+    verificadoroUsuarioRepository.save(verificador);
+
+    String verificationLink = "http://localhost:8080/auth/verify?token=" + uuid.toString();
+    emailService.sendEmail(newUser.getEmail(), "Confirme seu e-mail",
+            "Clique no link para ativar sua conta: " + verificationLink);
+
+    return ResponseEntity.ok("Usuário registrado. Verifique seu e-mail!");
+
 }
 
     @PostMapping("/login")
@@ -103,4 +120,27 @@ public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO user) {
             return ResponseEntity.internalServerError().body("Erro ao processar a solicitação");
         }
     }
+
+    @PostMapping("/verify")
+    public ResponseEntity<?> verifyEmail(@RequestParam String token) {
+        Optional<VerificadorUsuario> verificador = verificadoroUsuarioRepository.findByUuid(UUID.fromString(token));
+
+        if (verificador.isEmpty()) {
+            return ResponseEntity.badRequest().body("Token inválido ou expirado.");
+        }
+
+        VerificadorUsuario usuarioVerificado = verificador.get();
+        Users user = usuarioVerificado.getUser();
+
+        if (usuarioVerificado.getExp_date().isBefore(Instant.now())) {
+            return ResponseEntity.badRequest().body("O token expirou.");
+        }
+
+        user.setEnabled(true);
+        userRepository.save(user);
+
+        return ResponseEntity.ok("E-mail verificado com sucesso!");
+    }
+
+
 }

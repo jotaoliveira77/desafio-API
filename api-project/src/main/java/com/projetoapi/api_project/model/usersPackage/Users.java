@@ -24,21 +24,19 @@ import java.util.List;
 public class Users implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long user_id;
 
     @NotBlank
-    //@Size(min = 5, max = 30)
-    //@Column(unique = true)
     private String username;
 
     @NotBlank
-    //@Size(min = 8, max = 20)
     private String password;
 
     @NotBlank
-    //@Size(max = 50)
     @Email
     private String email;
+
+    private boolean enabled = false;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
