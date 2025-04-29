@@ -69,13 +69,13 @@ public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO user) {
 
 }
 
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestBody @Valid LoginDTO data) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
-        var auth = this.authenticationManager.authenticate(usernamePassword);
+        @PostMapping("/login")
+        public ResponseEntity login(@RequestBody @Valid LoginDTO data) {
+            var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
+            var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        var token = tokenService.generateToken((Users)auth.getPrincipal());
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+            var token = tokenService.generateToken((Users)auth.getPrincipal());
+            return ResponseEntity.ok(new LoginResponseDTO(token));
 
     }
 

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Service;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -12,6 +12,7 @@ import java.util.UUID;
 @Entity
 @Table(name ="verificacao_usuario")
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class VerificadorUsuario {
